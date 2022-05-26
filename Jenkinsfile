@@ -6,7 +6,7 @@ pipeline {
         CODEFRESH_VERSION = '0.0.6'
         DOCKER_PASSWORD = credentials('docker-hub-registry-password')
         DOCKER_USERNAME = 'dustinvanbuskirk'
-        IMAGE_NAME = 
+        IMAGE_NAME = 'dustinvanbuskirk/jenkins-example-app'
         IMAGE = 'docker.io/dustinvanbuskirk/jenkins-example-app:0.0.2'
         IMAGE_SHA = 'docker.io/dustinvanbuskirk/jenkins-example-app:0.0.2'
         IMAGE_URI = 'docker.io/dustinvanbuskirk/jenkins-example-app:0.0.2'
@@ -45,7 +45,7 @@ pipeline {
           steps{
             script {
               docker.withRegistry( '', dockerhub-creds ) {
-                dockerImage.push("$BUILD_NUMBER")
+                dockerImage.push("0.0.$BUILD_NUMBER")
               }
             }
           }
