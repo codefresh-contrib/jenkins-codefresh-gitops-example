@@ -6,6 +6,7 @@ pipeline {
         CODEFRESH_VERSION = '0.0.6'
         DOCKER_PASSWORD = credentials('docker-hub-registry-password')
         DOCKER_USERNAME = 'dustinvanbuskirk'
+        IMAGE_NAME = 
         IMAGE = 'docker.io/dustinvanbuskirk/jenkins-example-app:0.0.2'
         IMAGE_SHA = 'docker.io/dustinvanbuskirk/jenkins-example-app:0.0.2'
         IMAGE_URI = 'docker.io/dustinvanbuskirk/jenkins-example-app:0.0.2'
@@ -27,6 +28,28 @@ pipeline {
         WORKFLOW_URL = "${env.JOB_URL}"
     }
     stages {
+        stage('Cloning Git') {
+          steps {
+            git([url: 'https://github.com/codefresh-contrib/jenkins-codefresh-gitops-example.git', branch: 'main', credentialsId: 'github-salesdemo'])
+
+          }
+        }
+        stage('Building image') {
+          steps{
+            script {
+              dockerImage = docker.build IMAGE_NAME
+            }
+          }
+        }
+        stage('Deploy Image') {
+          steps{
+            script {
+              docker.withRegistry( '', dockerhub-creds ) {
+                dockerImage.push("$BUILD_NUMBER")
+              }
+            }
+          }
+        }
         stage('Report Image to Codefresh') {
             agent{
                 docker {
